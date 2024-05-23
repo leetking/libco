@@ -349,6 +349,7 @@ ssize_t read( int fd, void *buf, size_t nbyte )
 	int timeout = ( lp->read_timeout.tv_sec * 1000 ) 
 				+ ( lp->read_timeout.tv_usec / 1000 );
 
+    // poll 注册事件，然后yield，等待数据好了被resume
 	struct pollfd pf = { 0 };
 	pf.fd = fd;
 	pf.events = ( POLLIN | POLLERR | POLLHUP );
@@ -572,7 +573,6 @@ ssize_t recv( int socket, void *buffer, size_t length, int flags )
 	}
 
 	return readret;
-	
 }
 
 extern int co_poll_inner( stCoEpoll_t *ctx,struct pollfd fds[], nfds_t nfds, int timeout, poll_pfn_t pollfunc);

@@ -61,18 +61,18 @@ enum {
 //-------------
 // 64 bit
 // low | regs[0]: r15 |
-//    | regs[1]: r14 |
-//    | regs[2]: r13 |
-//    | regs[3]: r12 |
-//    | regs[4]: r9  |
-//    | regs[5]: r8  |
-//    | regs[6]: rbp |
-//    | regs[7]: rdi |
-//    | regs[8]: rsi |
-//    | regs[9]: ret |  //ret func addr
-//    | regs[10]: rdx |
-//    | regs[11]: rcx |
-//    | regs[12]: rbx |
+//     | regs[1]: r14 |
+//     | regs[2]: r13 |
+//     | regs[3]: r12 |
+//     | regs[4]: r9  |
+//     | regs[5]: r8  |
+//     | regs[6]: rbp |
+//     | regs[7]: rdi |
+//     | regs[8]: rsi |
+//     | regs[9]: ret |  //ret func addr
+//     | regs[10]: rdx |
+//     | regs[11]: rcx |
+//     | regs[12]: rbx |
 // hig | regs[13]: rsp |
 enum {
   kRDI = 7,
@@ -107,6 +107,10 @@ int coctx_make(coctx_t* ctx, coctx_pfn_t pfn, const void* s, const void* s1) {
   return 0;
 }
 #elif defined(__x86_64__)
+/**
+ * 构造协程ctx：把协程信息存一份到ctx中
+ * 存储栈地址sp, 入口地址pfn, 协程s
+ */
 int coctx_make(coctx_t* ctx, coctx_pfn_t pfn, const void* s, const void* s1) {
   char* sp = ctx->ss_sp + ctx->ss_size - sizeof(void*);
   sp = (char*)((unsigned long)sp & -16LL);
@@ -116,9 +120,7 @@ int coctx_make(coctx_t* ctx, coctx_pfn_t pfn, const void* s, const void* s1) {
   *ret_addr = (void*)pfn;
 
   ctx->regs[kRSP] = sp;
-
   ctx->regs[kRETAddr] = (char*)pfn;
-
   ctx->regs[kRDI] = (char*)s;
   ctx->regs[kRSI] = (char*)s1;
   return 0;

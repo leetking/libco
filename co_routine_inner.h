@@ -70,7 +70,7 @@ struct stCoRoutine_t
 	unsigned int save_size;
 	char* save_buffer;
 
-	stCoSpec_t aSpec[1024];
+	stCoSpec_t aSpec[1024];  // 协程变量, pthread_key_t -> void*
 
 };
 
